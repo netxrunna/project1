@@ -10,6 +10,11 @@ backup_folder_path = os.environ.get('BACKUPFOLDER')
 if backup_folder_path is None or not backup_folder_path:
     backup_folder_path = './backup'
 
+# backup file path from environment
+backup_file_path = os.environ.get('BACKUPFOLDER')
+if backup_file_path is None or not backup_file_path:
+    backup_file_path = './backup'
+
 # Create back up folder if it doesn't exist
 if not os.path.exists(backup_folder_path):
     os.makedirs(backup_folder_path)
