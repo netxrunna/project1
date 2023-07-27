@@ -42,6 +42,10 @@ def backup():
         response = "No such folder: " + folder_to_backup
         return response, 404
     
+@app.route('/')
+def home():
+    return(redirect(url_for('backup')))
+    
 
 # Run Flask
 if __name__ == '__main__':
