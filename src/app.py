@@ -1,48 +1,55 @@
-from backup import backup_folder
-from data import get_log, get_stat
-from flask import Flask, request
+import json
+from flask import Flask, request, redirect, url_for
+from backup import folder
+from data import get, stats
 
 app = Flask(__name__)
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 
 
 @app.route('/log')
 def log():
     try:
-        start = request.args.get('start')
-        end = request.args.get('end')
+        startdate = request.args.get('startdate')
+        enddate = request.args.get('enddate')
 
-        logs = get_log(start, end)
+        logs = get(startdate, enddate)
         response = logs
+        #response = json.loads(str(response))
+        #response = json.dumps(response, indent=2)
+        #return json.dumps(response, indent=2)
         return response
     except ValueError:
-        response = "Invalid Dates"
+        response = "Dates were not in the expected format."
         return response, 400
-    
+
 
 @app.route('/stat')
 def stat():
-    stats = get_stat()
-    response = stats
+    statistics = stats()
+    response = statistics
     return response
 
-
-@app.route('/', methods=['POST'])
-def backup():
+@app.route('/backup', methods=['POST'])
+def backup(): 
 
     folder_to_backup = request.json["path"]
     try:
         if folder_to_backup is None:
-            response = "No folder path supplied"
+            response = "Please specify a folder or file to backup!"
             return response, 400
-        
-        backup_folder(folder_to_backup)
+
+        folder(folder_to_backup)
         response = "Backup Completed"
         return response, 201
     except ValueError:
-        response = "No such folder: " + folder_to_backup
+        response = "Error 404 -  No folder or file found at path: " + folder_to_backup
         return response, 404
     
+@app.route('/')
+def home():
+    return(redirect(url_for('backup')))
 
-# Run Flask
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

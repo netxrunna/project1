@@ -4,16 +4,17 @@ import mysql.connector
 from flask import jsonify
 from dateutil import parser
 
-
+# Get the backup folder path from environment variable
 sql_host = os.environ.get('SQL_HOST')
 if sql_host is None or not sql_host:
-    sql_host = 'localhost'
+    sql_host = '172.18.0.3'
 
 
-# Connect to mysql db
+# Connect to the MySQL database
 def dbconnect():
     return mysql.connector.connect(
         host=sql_host,
+        port=3306,
         user="root",
         password="password",
         database="fca")
@@ -30,20 +31,20 @@ def log_to_db(action, parameter, status):
     cursor.close()
     db.close()
 
-    
-def get_log(start, end):
+
+def get(startdate, enddate):
     start_date = None
     end_date = None
 
-# Check if start date is valid
-    if start is not None:
-        start_date = parser.parse(start)
-        start += " 00:00:00"
+    # check start date is valid
+    if startdate is not None:
+        start_date = parser.parse(startdate)
+        startdate += " 00:00:00"
 
-# Check if end date is valid
-    if end is not None:
-        end_date = parser.parse(end)
-        end += "23:59:59"
+    # check end date is valid
+    if enddate is not None:
+        end_date = parser.parse(enddate)
+        enddate += " 23:59:59"
 
     if start_date is not None and end_date is not None and end_date < start_date:
         raise ValueError("Start Date is < End Date")
@@ -51,25 +52,25 @@ def get_log(start, end):
     db = dbconnect()
     cursor = db.cursor()
     try:
-        select_query = "SELECT date, action, parameter, status FROM log"
+        select_query = "SELECT date, action, parameter, status FROM log "
 
         if start_date is not None and end_date is not None:
-            select_query += "WHERE date >= '" + start + "' AND date <= '" + end + "' "
+            select_query += "WHERE date >= '" + startdate + "' AND date <= '" + enddate + "' "
         elif start_date is not None and end_date is None:
-            select_query += "WHERE date >= '" + start + "' "
+            select_query += "WHERE date >= '" + startdate + "' "
         elif start_date is None and end_date is not None:
-            select_query += "WHERE date <= '" + end + "' "
+            select_query += "WHERE date <= '" + enddate + "' "
 
         select_query += "ORDER BY date"
         cursor.execute(select_query)
 
-    #Column names to get keys for json
+        # Get column names, need this so we can add the keys for the JSON
         columns = [col[0] for col in cursor.description]
 
-    # Fetch all rows from the recordset
+        # Fetch all rows from the recordset
         rows = cursor.fetchall()
 
-    #Convert each row into a dictionary with column names as keys
+        # Convert each row into a dictionary with column names as keys
         logs = []
         for row in rows:
             record = dict(zip(columns, row))
@@ -82,7 +83,7 @@ def get_log(start, end):
     return jsonify(logs)
 
 
-def get_stat():
+def stats():
     db = dbconnect()
     cursor = db.cursor()
     try:
@@ -103,8 +104,8 @@ def get_stat():
 
     log_to_db("GET STATS", "", "SUCCESS")
     return jsonify({
-        "number-of-backups": number_of_backups[0],
-        "successful-backups": number_of_successes[0],
-        "failed-backups": number_of_errors[0]
+        "Attempted backups:": number_of_backups[0],
+        "Successful backups:": number_of_successes[0],
+        "Failed backups:": number_of_errors[0]
     })
 dir
