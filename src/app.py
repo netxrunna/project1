@@ -6,6 +6,9 @@ from data import get, stats
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 
+@app.route('/test')
+def test():
+    return = "This Page is Successful"
 
 @app.route('/log')
 def log():
