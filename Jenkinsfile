@@ -18,7 +18,7 @@ pipeline {
       steps {
         sh "sudo docker stop pythonapp"
         sh "sudo docker rm pythonapp"
-        sh "sudo docker run -d -p 5000:5000 -e SQL_HOST=mysql:3306 --name pythonapp localhost:8083/pythonapp"
+        sh "sudo docker run -d -p 5000:5000 -e SQL_HOST=host.docker.internal --name pythonapp localhost:8083/pythonapp"
       }
     }
   }
