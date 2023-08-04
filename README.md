@@ -1,5 +1,21 @@
 # QAProjectJenkins
 
+Objective:
+
+Use Jenkins and Nexus to automate a CI pipline for the backup app built in project 1. It should be able to push new changes to the repository when changes are made to the source code.
+
+Risk Assessment:
+
+1. Source code not working would lead to the application not working correctly.
+
+2. Making sure the Jenkins container runs without any errors or the purpose of a CI/CD Pipeline would not work.
+
+3. Nexus Container not running would cause the project to not have a central repo connecting all parts of it.
+
+4. If docker stops working I won't be able to build and deploy the image into a container.
+
+5. Pushing sensitive information to my git repository as this could be a security risk as anybody could access the database.
+
 PLANNING STAGE:
 
 During the planning stage I created a Trello page which created an environment for me where I could track my work. I set up the board highlighting all the steps I would need to take to start the project and to understand the definition of the project being completed. This started with getting a repo set up and having my SQL database fully set up before going into building an image. Once I created this I made sure to mark it on my Trello board and move onto the next step. Following from this I made sure to understand how nexus, docker & jenkins works and which application to start of with. Once I built the docker image and started the container I made sure that the application works by testing the localhost:5000/log to see if this output the page I've set in my @app.rout('/log') within my app.py file. 
@@ -10,7 +26,7 @@ Understading that this process was completed and successful, I understood that t
 
 STEPS TO RECREATE:
 
-1. After Creating the SQL Table, app.py, backup.py & data.py files the next step is to create a Dockerfile located outside of the src/ folder all 3 .py files are located in with the code highlighted below. Whilst making sure Docker Hub is open I ran "docker build -t localhost:8083/pythonapp ." to build my docker image which is also shown below.
+1. First I needed to make sure that docker desktop was setup correctly to allow inseucre registries by adding the local hosts into the docker desktop config as seen in the first screenshot below. After Creating the SQL Table, app.py, backup.py & data.py files the next step is to create a Dockerfile located outside of the src/ folder all 3 .py files are located in with the code highlighted below. Whilst making sure Docker Hub is open I ran "docker build -t localhost:8083/pythonapp ." to build my docker image which is also shown below.
 ![FCA_Database](https://github.com/netxrunna/project1/assets/103886193/168bba70-d362-4ecf-8e67-e4a10f16daa7)
 ![Dock run](https://github.com/netxrunna/project1/assets/103886193/0010b2c8-1dc2-4ad0-9cdf-c84a1a3a3067)
 ![Docker_Image_Ls](https://github.com/netxrunna/project1/assets/103886193/5884f37e-754c-44a5-ac44-517f050fb7d0)
