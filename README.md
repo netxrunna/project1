@@ -11,8 +11,12 @@ Understading that this process was completed and successful, I understood that t
 STEPS TO RECREATE:
 
 1. After Creating the SQL Table, app.py, backup.py & data.py files the next step is to create a Dockerfile located outside of the src/ folder all 3 .py files are located in with the code highlighted below. Whilst making sure Docker Hub is open I ran "docker build -t localhost:8083/pythonapp ." to build my docker image which is also shown below.
+![FCA_Database](https://github.com/netxrunna/project1/assets/103886193/168bba70-d362-4ecf-8e67-e4a10f16daa7)
+![Dock run](https://github.com/netxrunna/project1/assets/103886193/0010b2c8-1dc2-4ad0-9cdf-c84a1a3a3067)
+![Docker_Image_Ls](https://github.com/netxrunna/project1/assets/103886193/5884f37e-754c-44a5-ac44-517f050fb7d0)
 
 2. Once the image was built and we had all that we needed it was time to build the container. Using "docker run -d -p 5000:5000 -e SQL_HOST=host.docker.internal --name pythonapp localhost:8083/pythonapp", using "SQL-host=host.docker.internal" to allow the container to connect to the database I created earlier on. Using "Docker ps" will then allow me to see whether my container is running or not, which is also shown in the screenshot.
+![Docker_PS](https://github.com/netxrunna/project1/assets/103886193/0f4b61ad-ea54-46ee-a753-8b405cee0018)
 
 3. After establishing that I was able to restart a container using my docker image the next step was to upload this to nexus using the nexus container provided to us using localhost:8081. Once Nexus was running the first step was to create a Blob storage of type "File" and filling out the information required based on your preference. Following on from the previous step I added "Docker Bearer Token" which is an access token for anonymous pulls. Furthermore, the next step would be creating a repository of type "Docker (hosted)" filling out the required fields. 
 
