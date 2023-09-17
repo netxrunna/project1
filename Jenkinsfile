@@ -10,7 +10,8 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: '12eb5b2a-6649-423d-b673-ae742814ee3a', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([
+                      $class: 'AmazonWebServicesCredentialsBinding',(credentialsId: '12eb5b2a-6649-423d-b673-ae742814ee3a', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         // Authenticate with ECR
                         sh "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY"
 
